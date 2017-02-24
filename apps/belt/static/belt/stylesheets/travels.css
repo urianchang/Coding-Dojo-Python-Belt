@@ -1,0 +1,10 @@
+/* CSS Reset */
+
+.nav-bar{
+    width: 100%;
+}
+.left-col{
+    text-align: right;
+    vertical-align: middle;
+    padding: 15px;
+}

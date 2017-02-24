@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Travel Dashboard</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'belt/stylesheets/travels.css' %}">
+    </head>
+    <body>
+        <div class="nav-bar">
+            <table>
+                <tr>
+                    <th class="left-col">
+                        <form action='/logout' method='post'>
+                            {% csrf_token %}
+                            <input type="submit" value="Log out" class="button">
+                        </form>
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <div class="header">
+            <h1>Hello, {{user.first_name}}</h1>
+        </div>
+        <div class="user-trips">
+            <h3>Your Trip Schedules</h3>
+            <table>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </table>
+        </div>
+        <div class="other-travels"></div>
+    </body>
+</html>

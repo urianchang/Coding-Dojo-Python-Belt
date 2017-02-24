@@ -23,6 +23,7 @@
         </div>
         <div class="user-trips">
             <h3>Your Trip Schedules:</h3>
+            {% if user_trips %}
             <table>
                 <tr>
                     <th>Destination</th>
@@ -30,7 +31,18 @@
                     <th>Travel End Date</th>
                     <th>Plan</th>
                 </tr>
+                {% for trip in user_trips %}
+                <tr>
+                    <td>{{trip.destination}}</td>
+                    <td>{{trip.start}}</td>
+                    <td>{{trip.stop}}</td>
+                    <td>{{trip.description}}</td>
+                </tr>
+                {% endfor %}
             </table>
+            {% else %}
+            <h4>You don't have any trips scheduled yet.</h4>
+            {% endif %}
         </div>
         <div class="other-travels">
             <h3>Other User's Travel Plans:</h3>

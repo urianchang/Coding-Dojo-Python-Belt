@@ -50,3 +50,9 @@ td{
     border-radius: 5px;
     margin: 10px;
 }
+.error-messages{
+    color: red;
+}
+.success{
+    color: green;
+}

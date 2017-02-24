@@ -55,19 +55,26 @@ def welcome(request):
         return redirect('/')
     else:
         print "** Welcome back, user! **"
+        this_user = User.userManager.get(id=request.session['user_id'])
         context = {
-            'user': User.userManager.get(id=request.session['user_id']),
-            'users': User.userManager.all()
+            'user': this_user,
+            'user_trips': Trip.tripMan.filter(user=this_user)
         }
         return render(request, 'belt/travels.html', context)
 
 # Render new trip page
 def newTrip(request):
-    print "** Add new trip **"
-    context = {
-        'user': User.userManager.get(id=request.session['user_id'])
-    }
-    return render(request, 'belt/new.html', context)
+    if 'user_id' not in request.session or request.session['user_id'] == -1:
+        print "Nuh-uh. You can't see this page yet."
+        request.session['user_id'] = -1
+        messages.warning(request, 'Please sign-in or register.')
+        return redirect('/')
+    else:
+        print "** Add new trip **"
+        context = {
+            'user': User.userManager.get(id=request.session['user_id'])
+        }
+        return render(request, 'belt/new.html', context)
 
 # When user adds a new trip
 def addTrip(request):
@@ -78,8 +85,11 @@ def addTrip(request):
     print "** Processing new trip **"
     add_resp = Trip.tripMan.addTrip(user_id, request.POST)
     if not add_resp['valid']:
-        messages.error(request, add_resp['msg'])
-    messages.success(request, add_resp['msg'])
+        for msg in add_resp['msg']:
+            messages.error(request, msg)
+    else:
+        for msg in add_resp['msg']:
+            messages.success(request, msg)
     return redirect(reverse('travels_new'))
 
 # When user logs out

@@ -88,12 +88,27 @@ class TripManager(models.Manager):
         print "** Trip Manager activated **"
         print "** Checking trip form **"
         messages = []
+        print postData['startdate']
+        print postData['enddate']
         if len(postData['destination']) < 1:
             messages.append("Destination is required.")
         if len(postData['description']) < 1:
             messages.append("Description is required.")
-            
-        print "Hello from tripManager"
+        if not re.search(r'^[0-9][0-9][0-9][0-9][\-][0-9][0-9][\-][0-9][0-9]', postData['startdate']):
+            messages.append("Invalid start date format. Should be YYYY-MM-DD format.")
+        elif postData['startdate'] < time.strftime("%Y-%m-%d"):
+            messages.append("Invalid start date. Travel has to be future dated.")
+        if not re.search(r'^[0-9][0-9][0-9][0-9][\-][0-9][0-9][\-][0-9][0-9]', postData['enddate']):
+            messages.append("Invalid end date format. Should be YYYY-MM-DD format.")
+        elif postData['startdate'] > postData['enddate']:
+            messages.append("Invalid end date. End date of travel should not be before start date.")
+        if not messages:
+            messages.append('Thank you for adding your new trip.')
+            Trip.tripMan.create(destination=postData['destination'], description=postData['description'], start=postData['startdate'], stop=postData['enddate'], user=User.userManager.get(id=user_id))
+            return {'valid': True, 'msg': messages}
+        else:
+            print "** Something went wrong **"
+            return {'valid': False, 'msg': messages}
 
 class User(models.Model):
     first_name = models.CharField(max_length=255)

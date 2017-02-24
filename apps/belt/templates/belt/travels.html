@@ -8,8 +8,9 @@
     </head>
     <body>
         <div class="nav-bar">
-            <table>
+            <table class="nav">
                 <tr>
+                    <th class="right-col">Hello, {{user.first_name}}</th>
                     <th class="left-col">
                         <form action='/logout' method='post'>
                             {% csrf_token %}
@@ -19,18 +20,28 @@
                 </tr>
             </table>
         </div>
-        <div class="header">
-            <h1>Hello, {{user.first_name}}</h1>
-        </div>
         <div class="user-trips">
-            <h3>Your Trip Schedules</h3>
+            <h3>Your Trip Schedules:</h3>
             <table>
                 <tr>
-                    <th></th>
-                    <th></th>
+                    <th>Destination</th>
+                    <th>Travel Start Date</th>
+                    <th>Travel End Date</th>
+                    <th>Plan</th>
                 </tr>
             </table>
         </div>
-        <div class="other-travels"></div>
+        <div class="other-travels">
+            <h3>Other User's Travel Plans:</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Destination</th>
+                    <th>Travel Start Date</th>
+                    <th>Travel End Date</th>
+                    <th>Do You Want To Join?</th>
+                </tr>
+            </table>
+        </div>
     </body>
 </html>

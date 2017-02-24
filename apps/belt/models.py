@@ -94,4 +94,4 @@ class User(models.Model):
     userManager = UserManager()
 
 class Trip(models.Model):
-    
+    destination = models.CharField(max_length=255)

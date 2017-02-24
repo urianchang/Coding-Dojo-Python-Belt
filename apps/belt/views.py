@@ -58,7 +58,7 @@ def welcome(request):
         this_user = User.userManager.get(id=request.session['user_id'])
         context = {
             'user': this_user,
-            'user_trips': Trip.tripMan.filter(plan=this_user)|Trip.tripMan.filter(user=this_user),
+            'user_trips': Trip.tripMan.filter(user=this_user) | Trip.tripMan.filter(plan=this_user),
             'trips': Trip.tripMan.all().exclude(user=this_user).exclude(plan=this_user)
         }
         return render(request, 'belt/travels.html', context)
@@ -136,15 +136,9 @@ def logout(request):
         return redirect('/')
     print "** Logging out **"
     request.session.pop('user_id')
+    messages.success(request, "Thanks for logging out.")
     return redirect('/')
 
-# # Delete a user
-# def delete(request):
-#     if request.method == 'GET':
-#         print "Delete is POST-only"
-#         return redirect('/')
-#     User.userManager.get(id=request.POST['id']).delete()
-#     return redirect('/success')
 
 # If user accesses a URL route that's not supported...
 def any(request):

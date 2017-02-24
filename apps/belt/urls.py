@@ -11,6 +11,5 @@ urlpatterns = [
     url(r'^travels/add/process$', views.addTrip),
     url(r'^travels/destination/(?P<id>\d+)$', views.showTrip),
     url(r'^join$', views.joinTrip),
-    # url(r'^delete$', views.delete),
     url(r'^.+$', views.any)
 ]

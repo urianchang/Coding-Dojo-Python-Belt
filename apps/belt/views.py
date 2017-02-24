@@ -58,7 +58,8 @@ def welcome(request):
         this_user = User.userManager.get(id=request.session['user_id'])
         context = {
             'user': this_user,
-            'user_trips': Trip.tripMan.filter(user=this_user)
+            'user_trips': Trip.tripMan.filter(plan=this_user)|Trip.tripMan.filter(user=this_user),
+            'trips': Trip.tripMan.all().exclude(user=this_user).exclude(plan=this_user)
         }
         return render(request, 'belt/travels.html', context)
 
@@ -91,6 +92,42 @@ def addTrip(request):
         for msg in add_resp['msg']:
             messages.success(request, msg)
     return redirect(reverse('travels_new'))
+
+# Show trip details page
+def showTrip(request, id):
+    if 'user_id' not in request.session or request.session['user_id'] == -1:
+        print "Nuh-uh. You can't see this page yet."
+        request.session['user_id'] = -1
+        messages.warning(request, 'Please sign-in or register.')
+        return redirect('/')
+    else:
+        print "** Showing trip details for: ", id
+        req_resp = Trip.tripMan.showTrip(id)
+        if not req_resp['valid']:
+            messages.error(request, req_resp['msg'])
+            return redirect(reverse('travels_home'))
+        else:
+            this_user = User.userManager.get(id=request.session['user_id'])
+            context = {
+                'user': this_user,
+                'trip': req_resp['trip']
+            }
+            return render(request, 'belt/trip.html', context)
+
+# User joins trip
+def joinTrip(request):
+    if request.method == 'GET':
+        print "Joining is a POST request"
+        messages.error(request, 'Joining is a POST request.')
+    else:
+        user_id = request.session['user_id']
+        req_resp = Trip.tripMan.joinTrip(user_id, request.POST)
+        if not req_resp['valid']:
+            for msg in req_resp['msg']:
+                messages.error(request, msg)
+        messages.success(request, 'Trip has been added.')
+    return redirect(reverse('travels_home'))
+
 
 # When user logs out
 def logout(request):

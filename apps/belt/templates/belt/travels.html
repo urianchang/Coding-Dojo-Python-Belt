@@ -21,6 +21,19 @@
                 </tr>
             </table>
         </div>
+        {% if messages %}
+        <div class="flash-messages">
+            <ul>
+                {% for msg in messages %}
+                {% if msg.tags == "error" %}
+                <li class="error-messages">{{msg}}</li>
+                {% elif msg.tags == "success" %}
+                <li class="success">{{msg}}</li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
         <div class="user-trips">
             <h3>Your Trip Schedules:</h3>
             {% if user_trips %}
@@ -33,7 +46,7 @@
                 </tr>
                 {% for trip in user_trips %}
                 <tr>
-                    <td>{{trip.destination}}</td>
+                    <td><a href="/travels/destination/{{trip.id}}">{{trip.destination}}</a></td>
                     <td>{{trip.start}}</td>
                     <td>{{trip.stop}}</td>
                     <td>{{trip.description}}</td>
@@ -44,8 +57,10 @@
             <h4>You don't have any trips scheduled yet.</h4>
             {% endif %}
         </div>
+        <hr>
         <div class="other-travels">
             <h3>Other User's Travel Plans:</h3>
+            {% if trips %}
             <table>
                 <tr>
                     <th>Name</th>
@@ -54,7 +69,25 @@
                     <th>Travel End Date</th>
                     <th>Do You Want To Join?</th>
                 </tr>
+                {% for trip in trips %}
+                <tr>
+                    <td>{{trip.user.first_name}} {{trip.user.last_name}}</td>
+                    <td><a href="/travels/destination/{{trip.id}}">{{trip.destination}}</a></td>
+                    <td>{{trip.start}}</td>
+                    <td>{{trip.stop}}</td>
+                    <td>
+                        <form action='/join' method='post'>
+                            {% csrf_token %}
+                            <input type="hidden" name="trip_id" value="{{trip.id}}">
+                            <input type="submit" value="Join" class="button">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
             </table>
+            {% else %}
+            <h4><span>There are no other scheduled trips</span></h4>
+            {% endif %}
         </div>
     </body>
 </html>

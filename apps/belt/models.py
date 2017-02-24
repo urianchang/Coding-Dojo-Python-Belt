@@ -109,6 +109,21 @@ class TripManager(models.Manager):
         else:
             print "** Something went wrong **"
             return {'valid': False, 'msg': messages}
+    def showTrip(self, trip_id):
+        if len(Trip.tripMan.filter(id=trip_id)) < 1:
+            print "** This trip isn't in the database **"
+            return {'valid': False, 'msg': "This trip isn't in the database."}
+        print "** Trip found **"
+        return {'valid': True, 'trip': Trip.tripMan.get(id=trip_id)}
+    def joinTrip(self, user_id, postData):
+        print "** User wants to join trip **"
+        this_user = User.userManager.get(id=user_id)
+        this_trip = Trip.tripMan.get(id=postData['trip_id'])
+        if this_user in this_trip.plan.all():
+            print "** User has already joined this trip **"
+            return {'valid': False, 'msg': "You've already joined this trip."}
+        this_user.groups.add(this_trip)
+        return {'valid': True}
 
 class User(models.Model):
     first_name = models.CharField(max_length=255)

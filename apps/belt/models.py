@@ -83,6 +83,18 @@ class UserManager(models.Manager):
         status.update({'valid': valid, 'messages': messages})
         return status
 
+class TripManager(models.Manager):
+    def addTrip(self, user_id, postData):
+        print "** Trip Manager activated **"
+        print "** Checking trip form **"
+        messages = []
+        if len(postData['destination']) < 1:
+            messages.append("Destination is required.")
+        if len(postData['description']) < 1:
+            messages.append("Description is required.")
+            
+        print "Hello from tripManager"
+
 class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -95,3 +107,11 @@ class User(models.Model):
 
 class Trip(models.Model):
     destination = models.CharField(max_length=255)
+    description = models.TextField()
+    start = models.DateField(auto_now=False, auto_now_add=False)
+    stop = models.DateField(auto_now=False, auto_now_add=False)
+    user = models.ForeignKey(User, related_name="trips")
+    plan = models.ManyToManyField(User, related_name="groups")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+    tripMan = TripManager()

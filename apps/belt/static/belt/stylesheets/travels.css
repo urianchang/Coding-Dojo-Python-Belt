@@ -23,6 +23,9 @@
     vertical-align: middle;
     padding: 15px;
 }
+.left-col button, form, input {
+    display: inline-block;
+}
 table {
     border-collapse: collapse;
     width: 50%;

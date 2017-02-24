@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Add Plan</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'belt/stylesheets/travels.css' %}">
+    </head>
+    <body>
+        <div class="nav-bar">
+            <table class="nav">
+                <tr>
+                    <th class="right-col">New trip for {{user.first_name}}</th>
+                    <th class="left-col">
+                        <button type="button" onclick="location.href='/travels'" class="button">Home</button>
+                        <form action='/logout' method='post'>
+                            {% csrf_token %}
+                            <input type="submit" value="Log out" class="button">
+                        </form>
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <div class="add-trip">
+            <h2>Add a Trip</h2>
+            {% if messages %}
+            <div class="flash-messages">
+                <ul>
+                    {% for msg in messages %}
+                    {% if msg.tags == "error" %}
+                    <li class="error-messages">{{msg}}</li>
+                    {% elif msg.tags == "success" %}
+                    <li class="success">{{msg}}</li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            <form action='/travels/add/process' method='post'>
+                {% csrf_token %}
+                <p><label for="destination">Destination: <input type="text" name="destination"></label></p>
+                <p><label for="description">Description: <input type="text" name="description"></label></p>
+                <p><label for="startdate">Travel Date From: <input type="date" name="startdate"></label></p>
+                <p><label for="enddate">Travel Date To: <input type="date" name="enddate"></label></p>
+                <input type="submit" value="Add" class="button">
+            </form>
+        </div>
+    </body>
+</html>

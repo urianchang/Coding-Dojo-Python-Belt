@@ -12,6 +12,7 @@
                 <tr>
                     <th class="right-col">Hello, {{user.first_name}}</th>
                     <th class="left-col">
+                        <button type="button" onclick="location.href='/travels/add'" class="button">Add Travel Plan</button>
                         <form action='/logout' method='post'>
                             {% csrf_token %}
                             <input type="submit" value="Log out" class="button">

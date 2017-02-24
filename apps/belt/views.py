@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import User
+from .models import User, Trip
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 # Create your views here.
 
@@ -45,7 +46,7 @@ def register(request):
             messages.error(request, msg)
     return redirect('/')
 
-# Render the success/welcome page
+# Render the travels page
 def welcome(request):
     if 'user_id' not in request.session or request.session['user_id'] == -1:
         print "Nuh-uh. You can't see this page yet."
@@ -59,6 +60,27 @@ def welcome(request):
             'users': User.userManager.all()
         }
         return render(request, 'belt/travels.html', context)
+
+# Render new trip page
+def newTrip(request):
+    print "** Add new trip **"
+    context = {
+        'user': User.userManager.get(id=request.session['user_id'])
+    }
+    return render(request, 'belt/new.html', context)
+
+# When user adds a new trip
+def addTrip(request):
+    if request.method == 'GET':
+        print "** Trips must be POST-ed **"
+        return redirect(reverse('travels_home'))
+    user_id = request.session['user_id']
+    print "** Processing new trip **"
+    add_resp = Trip.tripMan.addTrip(user_id, request.POST)
+    if not add_resp['valid']:
+        messages.error(request, add_resp['msg'])
+    messages.success(request, add_resp['msg'])
+    return redirect(reverse('travels_new'))
 
 # When user logs out
 def logout(request):
